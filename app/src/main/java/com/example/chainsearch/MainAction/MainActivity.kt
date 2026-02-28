@@ -1,4 +1,4 @@
-package com.example.chainsearch
+package com.example.chainsearch.MainAction
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
