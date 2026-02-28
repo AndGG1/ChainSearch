@@ -4,6 +4,7 @@
     android:viewportWidth="256"
     android:viewportHeight="256">
 
+    <group>
     <!-- Left bright side -->
     <path
         android:strokeColor="#FFA64D"
@@ -31,5 +32,6 @@
         android:strokeLineJoin="round"
         android:fillColor="@android:color/transparent"
         android:pathData="M80,55 L128,180 L176,55" />
+    </group>
 
 </vector>
