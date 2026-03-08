@@ -1,0 +1,113 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="256dp"
+            android:height="256dp"
+            android:viewportWidth="256"
+            android:viewportHeight="256">
+            <group android:name="group">
+                <path
+                    android:name="path"
+                    android:pathData="M 60 40 L 128 200"
+                    android:strokeColor="#FFA64D"
+                    android:strokeWidth="22"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round"/>
+                <path
+                    android:name="path_1"
+                    android:pathData="M 128 200 L 128 200"
+                    android:strokeColor="#CC6A14"
+                    android:strokeWidth="22"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round"/>
+                <path
+                    android:name="path_2"
+                    android:pathData="M 80 55 L 82.4 61.25"
+                    android:strokeColor="#000000"
+                    android:strokeAlpha="0.12"
+                    android:strokeWidth="10"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round"/>
+                <path
+                    android:name="path_3"
+                    android:pathData="M 128 180 L 128 180"
+                    android:strokeColor="#000000"
+                    android:strokeAlpha="0.12"
+                    android:strokeWidth="10"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round"/>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:duration="350"
+                    android:valueFrom="M 60 40 L 63.4 48"
+                    android:valueTo="M 60 40 L 128 200"
+                    android:valueType="pathType"
+                    android:interpolator="@android:anim/accelerate_interpolator"/>
+                <objectAnimator
+                    android:propertyName="strokeColor"
+                    android:startOffset="750"
+                    android:duration="150"
+                    android:valueFrom="#FFA64D"
+                    android:valueTo="#cc6a14"
+                    android:valueType="colorType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="path_2">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:startOffset="75"
+                android:duration="350"
+                android:valueFrom="M 80 55 L 82.4 61.25"
+                android:valueTo="M 80 55 L 128 180"
+                android:valueType="pathType"
+                android:interpolator="@android:anim/linear_interpolator"/>
+        </aapt:attr>
+    </target>
+    <target android:name="path_1">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:startOffset="350"
+                    android:duration="400"
+                    android:valueFrom="M 128 200 L 131.4 192"
+                    android:valueTo="M 196 40 L 128 200"
+                    android:valueType="pathType"
+                    android:interpolator="@android:anim/decelerate_interpolator"/>
+                <objectAnimator
+                    android:propertyName="strokeColor"
+                    android:startOffset="750"
+                    android:duration="150"
+                    android:valueFrom="#CC6A14"
+                    android:valueTo="#ffa64d"
+                    android:valueType="colorType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="path_3">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:startOffset="350"
+                android:duration="400"
+                android:valueFrom="M 128 180 L 130.4 173.75"
+                android:valueTo="M 128 180 L 176 55"
+                android:valueType="pathType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+</animated-vector>
+
