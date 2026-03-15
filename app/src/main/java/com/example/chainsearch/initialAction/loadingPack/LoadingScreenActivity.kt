@@ -6,6 +6,7 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.example.chainsearch.initialAction.viewModels.LoadingScreenViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -15,6 +16,8 @@ import kotlinx.coroutines.withContext
 class LoadingScreenActivity : ComponentActivity() {
 
     private var keepSplash = true
+    private val viewModel: LoadingScreenViewModel = LoadingScreenViewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_screen)
@@ -30,7 +33,8 @@ class LoadingScreenActivity : ComponentActivity() {
         lifecycleScope.launch {
             delay(900)
             withContext(Dispatchers.IO) {
-                LoadingChecks.checkExteriorEnv(this@LoadingScreenActivity, 1)
+                viewModel.checkInternalData(window.decorView.rootView)
+                viewModel.checkExternalData(this@LoadingScreenActivity, 1.0)
             }
             keepSplash = false
         }

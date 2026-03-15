@@ -7,22 +7,23 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.StatFs;
-import android.util.Log;
+import android.view.View;
+import android.view.ViewTreeObserver;
 
 import androidx.core.content.ContextCompat;
+
+import com.example.chainsearch.initialAction.viewModels.states.ExternalListener;
+import com.example.chainsearch.initialAction.viewModels.states.InternalListener;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: Add Firebase external check + others(optional)
-record ExternalListener(
-        boolean hasInternetConnection, List<String> perms, boolean hasStorage) {
-    //empty
-}
+import kotlinx.coroutines.flow.MutableStateFlow;
 
 public class LoadingChecks {
-    protected static ExternalListener checkExteriorEnv(Context context, int minimumFreeGB) {
+    //TODO: Add Firebase external check + API external check!!!
+    public static ExternalListener checkExteriorEnv(Context context, double minimumFreeGB) {
         //Internet & Network State check
         boolean hasInternet = true;
         ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -47,12 +48,25 @@ public class LoadingChecks {
         File storageFile = Environment.getExternalStorageDirectory();
         StatFs stat = new StatFs(storageFile.getPath());
         long freeBytes = stat.getAvailableBytes();
-        if (freeBytes >= (minimumFreeGB * 1_000_000L - 100_000)) {
+        if (freeBytes >= (minimumFreeGB * 1024L * 1024L * 1024L)) {
             hasEnoughSpace = true;
         }
 
         ExternalListener ex = new ExternalListener(hasInternet, unauthorizedPerms, hasEnoughSpace);
-        Log.d("test+ver", ex.toString());
         return ex;
+    }
+
+    //TODO: Add Database internal check!!!
+    public static InternalListener checkInternalEnv(View rootView, MutableStateFlow<Boolean> stateFlow) {
+        rootView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                stateFlow.setValue(true);
+                return true;
+            }
+        });
+
+        //TODO: Complete this when Database Impl. is ready!!!
+        return new InternalListener(true);
     }
 }
