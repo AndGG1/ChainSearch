@@ -60,7 +60,7 @@ android {
 
             buildConfigField(
                 "String",
-                "API_KEY",
+                   "API_KEY",
                 "\"${localProperties.getProperty("API_KEY")}\""
             )
         }
@@ -82,7 +82,7 @@ android {
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation("de.mkammerer:argon2-jvm:2.12")
+    implementation("com.lambdapioneer.argon2kt:argon2kt:1.6.0")
 
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.splashscreen)
