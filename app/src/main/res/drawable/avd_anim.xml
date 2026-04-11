@@ -11,7 +11,7 @@
             <group android:name="group">
                 <path
                     android:name="path"
-                    android:pathData="M 60 40 L 128 200"
+                    android:pathData="M 60 40 L 63.4 48"
                     android:strokeColor="#FFA64D"
                     android:strokeWidth="22"
                     android:strokeLineCap="round"
@@ -110,4 +110,3 @@
         </aapt:attr>
     </target>
 </animated-vector>
-

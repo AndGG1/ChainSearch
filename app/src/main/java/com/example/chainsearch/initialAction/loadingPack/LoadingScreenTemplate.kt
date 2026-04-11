@@ -1,11 +1,17 @@
 package com.example.chainsearch.initialAction.loadingPack
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.with
 import com.example.chainsearch.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,12 +36,23 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun LoadingScreen(viewModel: LoadingScreenViewModel) {
-    if (!viewModel.activityDrawnState.collectAsState().value) {
-        LoadingScreenTemplate_1()
-    } else {
-        LoadingScreenTemplate_2()
+    val state = viewModel.activityDrawnState.collectAsState().value
+
+    AnimatedContent(targetState = state,
+        transitionSpec = {
+            fadeIn() + slideInVertically(animationSpec = tween(200),
+                initialOffsetY = { fullHeight -> fullHeight }) with
+                    fadeOut(animationSpec = tween(200))
+        }) { targetState ->
+
+        if (!targetState) {
+            LoadingScreenTemplate_1()
+        } else {
+            LoadingScreenTemplate_2()
+        }
     }
 }
 
@@ -139,7 +156,7 @@ fun LoadingScreenTemplate_1() {
             )
         }
 
-        Box(modifier = Modifier.padding(top = anim2.value.dp, start = 85.dp)) {
+        Box(modifier = Modifier.padding(top = anim2.value.dp, start = 105.dp)) {
             Image(
                 painter = painterResource(id = R.drawable.rectangle),
                 contentDescription = "Menu icon (vector)",
@@ -149,7 +166,7 @@ fun LoadingScreenTemplate_1() {
             )
         }
 
-        Box(modifier = Modifier.padding(top = anim3.value.dp, start = 175.dp)) {
+        Box(modifier = Modifier.padding(top = anim3.value.dp, start = 215.dp)) {
             Image(
                 painter = painterResource(id = R.drawable.rectangle),
                 contentDescription = "Menu icon (vector)",
@@ -162,21 +179,7 @@ fun LoadingScreenTemplate_1() {
 }
 
 @Composable
-fun LoadingScreenTemplate_2() {
-    //TODO: Make Auth screen
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Gray)
-            .padding(8.dp)
-            .clip(shape = RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp))
-        ,
-        color = Color.Blue
-    ) {}
-}
-
-@Composable
 @Preview
-fun preview() {
+fun Preview() {
     LoadingScreen(LoadingScreenViewModel())
 }
