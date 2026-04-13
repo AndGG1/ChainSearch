@@ -15,6 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -24,6 +27,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,13 +44,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chainsearch.R
+import com.example.chainsearch.initialAction.viewModels.LoadingScreenViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 
 @Composable
-fun LoadingScreenTemplate_2() {
+fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
     val orange: Color = Color(204, 106, 20, 255)
     val lightOrange1: Color = Color(251, 237, 216, 255)
     val lightOrange2: Color = Color(255, 212, 159, 255)
     val lightOrange3: Color = Color(255, 166, 77, 255)
+
+    val usernameReady = remember { mutableStateOf(false) }
+    val passwordReady = remember { mutableStateOf(false) }
+    val emailReady = remember { mutableStateOf(false) }
+
+    val usernameValue = remember { mutableStateOf("") }
+    val passwordValue = remember { mutableStateOf("") }
+    val emailValue = remember { mutableStateOf("") }
 
     val transition = rememberInfiniteTransition()
     val anim = transition.animateFloat(
@@ -54,14 +70,6 @@ fun LoadingScreenTemplate_2() {
         targetValue = 7000F,
         animationSpec = infiniteRepeatable(
             animation = tween(1750),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-    val anim2 = transition.animateFloat(
-        initialValue = 331F,
-        targetValue = 333F,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1250),
             repeatMode = RepeatMode.Reverse
         )
     )
@@ -117,10 +125,9 @@ fun LoadingScreenTemplate_2() {
                     fontWeight = FontWeight(200),
                     modifier = Modifier
                         .padding(top = 10.dp)
-                        .offset(x = (-30).dp )
+                        .offset(x = (-63).dp, y = (-48).dp)
                 )
             }
-
 
             Text(
                 text = "Sign up",
@@ -132,9 +139,23 @@ fun LoadingScreenTemplate_2() {
             Column(modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
+                    text = "  User Info.  ",
+                    modifier = Modifier
+                        .padding(top = 180.dp)
+                        .clip(shape = RoundedCornerShape(6.dp, 6.dp, 6.dp, 6.dp))
+                        .background(color = orange)
+                        .padding(3.dp)
+                        .background(Color.White, RoundedCornerShape(6.dp)),
+                    style = TextStyle(fontSize = 15.sp)
+                )
+            }
+
+            Column(modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
                     text = "  Authentication Info.  ",
                     modifier = Modifier
-                        .padding(top = anim2.value.dp)
+                        .padding(top = 330.dp)
                         .clip(shape = RoundedCornerShape(6.dp, 6.dp, 6.dp, 6.dp))
                         .background(color = orange)
                         .padding(3.dp)
@@ -148,10 +169,104 @@ fun LoadingScreenTemplate_2() {
                 Text(
                     text = "~ or ~",
                     modifier = Modifier
-                        .padding(top = 560.dp),
+                        .padding(top = 555.dp),
                     style = TextStyle(fontSize = 18.sp, fontStyle = FontStyle.Italic),
                     fontWeight = FontWeight(200)
                 )
+            }
+
+            var isEnabled by remember { mutableStateOf(true) }
+            var scope = rememberCoroutineScope()
+            Column (modifier = Modifier.fillMaxWidth().padding(top = 580.dp),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+
+                Button(
+                    onClick = {
+                        isEnabled = false
+                        scope.launch {
+                            delay(3000)
+                            isEnabled = true
+                        }
+                    },
+                    enabled = isEnabled,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        disabledContentColor = Color.Transparent
+                    ),
+                    modifier =
+                        Modifier
+                            .background(color = Color.Transparent)
+                )
+                {
+                    Text(
+                        text = "       Sign up with Google  ",
+                        modifier = Modifier
+                            .clip(shape = RoundedCornerShape(6.dp, 6.dp, 6.dp, 6.dp))
+                            .background(Color.White)
+                            .padding(6.dp)
+                            .background(Color.White),
+                        color = Color.DarkGray,
+                        style = TextStyle(fontSize = 20.sp)
+                    )
+                }
+            }
+
+            Column (modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 594.dp)
+                .offset(x = (-95).dp),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                Image(
+                    painter = painterResource(id = R.drawable.google_logo),
+                    contentDescription = "Menu icon (vector)",
+                )
+            }
+
+            Column (modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 700.dp),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                Button(onClick = {
+                    isEnabled = false
+                    scope.launch {
+                        delay(3000)
+                        isEnabled = true
+                    }
+
+                    if (usernameReady.value && emailReady.value && passwordReady.value) {
+                        viewModel.setUserData(usernameValue.value, passwordValue.value, emailValue.value)
+                        viewModel.setRegState(true)
+                        viewModel.setNewVal(false)
+                    }
+                },
+                    enabled = isEnabled,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        disabledContentColor = Color.Transparent
+                    ),
+                    modifier =
+                        Modifier
+                            .background(color = Color.Transparent)
+                            .scale(1.35F))
+                {
+                    Text(
+                        text = "Sign Up",
+                        color = lightOrange1,
+                        modifier = Modifier
+                            .background(
+                                color = orange,
+                                shape = RoundedCornerShape(50)
+                            )
+                            .padding(horizontal = 14.dp, vertical = 8.dp),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    )
+                }
             }
         }
 
@@ -164,7 +279,7 @@ fun LoadingScreenTemplate_2() {
                     .scale(if (usernameScaleState.value) {1.82F} else 1.72F),
             )
         }
-        UsernameTextLabel(usernameScaleState)
+        UsernameTextLabel(usernameScaleState, usernameReady, usernameValue)
 
         var emailScaleState = remember { mutableStateOf(false) }
         Box(modifier = Modifier.padding(top = 400.dp, start = 70.dp)) {
@@ -175,7 +290,7 @@ fun LoadingScreenTemplate_2() {
                     .scale(if (emailScaleState.value) {1.82F} else 1.72F),
             )
         }
-        EmailTextLabel(emailScaleState)
+        EmailTextLabel(emailScaleState, emailReady, emailValue)
 
         var passwordState = remember { mutableStateOf(false) }
         Box(modifier = Modifier.padding(top = 500.dp, start = 70.dp)) {
@@ -186,18 +301,21 @@ fun LoadingScreenTemplate_2() {
                     .scale(if (passwordState.value) {1.82F} else 1.72F),
             )
         }
-        PasswordTextLabel(passwordState)
+        PasswordTextLabel(passwordState, passwordReady, passwordValue)
     }
 }
 
 @Composable
-fun UsernameTextLabel(state: MutableState<Boolean>) {
+fun UsernameTextLabel(state: MutableState<Boolean>, isReady: MutableState<Boolean>, value: MutableState<String>) {
     var username by remember { mutableStateOf("") }
-
     Box(modifier = Modifier.padding(top = 228.dp)) {
         TextField(
             value = username,
-            onValueChange = { username = it },
+            onValueChange = {
+                username = it
+                isReady.value = username.length >= 2
+                value.value = username
+                            },
             label = {Text("Username")},
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -213,13 +331,18 @@ fun UsernameTextLabel(state: MutableState<Boolean>) {
 }
 
 @Composable
-fun EmailTextLabel(state: MutableState<Boolean>) {
+fun EmailTextLabel(state: MutableState<Boolean>, isReady: MutableState<Boolean>, value: MutableState<String>) {
     var email by remember { mutableStateOf("") }
 
     Box(modifier = Modifier.padding(top = 378.dp)) {
         TextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = {
+                email = it
+                isReady.value =
+                    email.isNotEmpty() || email.isNotBlank()
+                value.value = email
+                            },
             label = {Text("Email")},
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -235,13 +358,17 @@ fun EmailTextLabel(state: MutableState<Boolean>) {
 }
 
 @Composable
-fun PasswordTextLabel(state: MutableState<Boolean>) {
+fun PasswordTextLabel(state: MutableState<Boolean>, isReady: MutableState<Boolean>, value: MutableState<String>) {
     var password by remember { mutableStateOf("") }
 
     Box(modifier = Modifier.padding(top = 478.dp)) {
         TextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = {
+                password = it
+                isReady.value = password.length >= 4
+                value.value = password
+                            },
             label = {Text("Password")},
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -259,5 +386,5 @@ fun PasswordTextLabel(state: MutableState<Boolean>) {
 @Composable
 @Preview
 fun Preview2() {
-    LoadingScreenTemplate_2()
+    LoadingScreenTemplate_2(LoadingScreenViewModel())
 }

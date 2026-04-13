@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "796278512942",
+    "firebase_url": "https://versatile-bf2d4-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "versatile-bf2d4",
     "storage_bucket": "versatile-bf2d4.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.chainsearch"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "796278512942-9r13gjfl1u4ejm185f0g369d5otqpf36.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chainsearch",
+            "certificate_hash": "4f503f742b9f1bb3b43812769f4a73fad6b88163"
+          }
+        },
+        {
+          "client_id": "796278512942-j81df6geu7d84i1nuhmi55q91h164g2q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDY9413DYsmU5WnVSEK7Chy_jHelIv5eN0"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "796278512942-j81df6geu7d84i1nuhmi55q91h164g2q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

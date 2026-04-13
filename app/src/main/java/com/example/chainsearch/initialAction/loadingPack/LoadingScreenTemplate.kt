@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -32,9 +33,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chainsearch.initialAction.viewModels.LoadingScreenViewModel
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import com.example.chainsearch.initialAction.auth.RegisterUserFunctionality
+import com.example.chainsearch.initialAction.auth.callRegisterEmail
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -49,17 +59,22 @@ fun LoadingScreen(viewModel: LoadingScreenViewModel) {
         }) { targetState ->
 
         if (!targetState) {
-            LoadingScreenTemplate_1()
+            LoadingScreenTemplate_1(viewModel)
         } else {
-            LoadingScreenTemplate_2()
+            LoadingScreenTemplate_2(viewModel)
         }
     }
 }
 
 @Composable
-fun LoadingScreenTemplate_1() {
+fun LoadingScreenTemplate_1(viewModel: LoadingScreenViewModel) {
     val orange: Color = Color(204, 106, 20, 255)
     val lightOrange1: Color = Color(251, 237, 216, 255)
+
+        if (viewModel.registerState.collectAsState().value) {
+            viewModel.setRegState(false)
+            callRegisterEmail(viewModel.getUsername(), viewModel.getPassword(), viewModel.getEmail(), viewModel)
+    }
 
     Surface(
         modifier = Modifier
