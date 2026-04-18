@@ -26,13 +26,7 @@ class LoadingScreenActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_screen)
 
-        val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { keepSplash }
-
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        startSplashScreen()
 
         lifecycleScope.launch {
             delay(500)
@@ -40,12 +34,29 @@ class LoadingScreenActivity : ComponentActivity() {
 
             startActivity(Intent(this@LoadingScreenActivity, LoadingScreenTemplate::class.java))
 
+            switchActivity()
+        }
+    }
+
+    private fun switchActivity() {
+        lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 viewModel.checkExternalInternalData(
-                    this@LoadingScreenActivity, 1.5)
-                viewModel.setNewVal(true)
+                    this@LoadingScreenActivity, 1.5
+                )
+                viewModel.setNewVal(1)
             }
         }
+    }
+
+    private fun startSplashScreen() {
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { keepSplash }
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
     }
 }
 

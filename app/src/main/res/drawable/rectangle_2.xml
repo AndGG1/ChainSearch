@@ -8,8 +8,8 @@
         android:scaleX="-1"
         android:translateX="200">
         <path
-            android:fillColor="#CC6A14"
-            android:pathData="M0,0 H200 V20 H20 Z" />
+            android:fillColor="#FF9F38"
+            android:pathData="M200,0 H20 A10,10 0 0 0 20,20 H200 Z" />
     </group>
 
     <group
@@ -17,10 +17,9 @@
         android:scaleY="0.9"
         android:translateX="195"
         android:translateY="1">
-
         <path
-            android:fillColor="#FFA64D"
-            android:pathData="M0,0 H200 V20 H18 Z" />
+            android:fillColor="#FFC363"
+            android:pathData="M200,0 H18 A10,10 0 0 0 18,20 H200 Z" />
     </group>
 
     <group
@@ -28,10 +27,9 @@
         android:scaleY="0.8"
         android:translateX="191"
         android:translateY="2">
-
         <path
             android:fillColor="#FFFFFF"
-            android:pathData="M0,0 H200 V20 H16 Z" />
+            android:pathData="M200,0 H16 A10,10 0 0 0 16,20 H200 Z" />
     </group>
 
 </vector>

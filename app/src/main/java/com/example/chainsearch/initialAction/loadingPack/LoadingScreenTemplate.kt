@@ -14,15 +14,16 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.with
 import com.example.chainsearch.R
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -33,18 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chainsearch.initialAction.viewModels.LoadingScreenViewModel
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import com.example.chainsearch.initialAction.auth.RegisterUserFunctionality
-import com.example.chainsearch.initialAction.auth.callRegisterEmail
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -58,10 +50,10 @@ fun LoadingScreen(viewModel: LoadingScreenViewModel) {
                     fadeOut(animationSpec = tween(200))
         }) { targetState ->
 
-        if (!targetState) {
-            LoadingScreenTemplate_1(viewModel)
-        } else {
-            LoadingScreenTemplate_2(viewModel)
+        when (targetState) {
+            1 -> IntroScreenTemplate(viewModel)
+            2 -> LoadingScreenTemplate_1(viewModel)
+            3 -> SignUpTemplate(viewModel)
         }
     }
 }
@@ -71,16 +63,9 @@ fun LoadingScreenTemplate_1(viewModel: LoadingScreenViewModel) {
     val orange: Color = Color(204, 106, 20, 255)
     val lightOrange1: Color = Color(251, 237, 216, 255)
 
-        if (viewModel.registerState.collectAsState().value) {
-            viewModel.setRegState(false)
-            callRegisterEmail(viewModel.getUsername(), viewModel.getPassword(), viewModel.getEmail(), viewModel)
-    }
-
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = orange)
-            .padding(8.dp)
             .clip(RoundedCornerShape(15.dp)),
         color = lightOrange1
     ) {
@@ -161,34 +146,37 @@ fun LoadingScreenTemplate_1(viewModel: LoadingScreenViewModel) {
             )
         )
 
-        Box(modifier = Modifier.padding(top = anim.value.dp)) {
-            Image(
-                painter = painterResource(id = R.drawable.rectangle),
-                contentDescription = "Menu icon (vector)",
-                modifier = Modifier
-                    .scale(.3F),
-                colorFilter = ColorFilter.tint(animColor.value)
-            )
-        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Box(modifier = Modifier.padding(top = anim.value.dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.rectangle),
+                    contentDescription = "Menu icon (vector)",
+                    modifier = Modifier.scale(.3F),
+                    colorFilter = ColorFilter.tint(animColor.value)
+                )
+            }
 
-        Box(modifier = Modifier.padding(top = anim2.value.dp, start = 105.dp)) {
-            Image(
-                painter = painterResource(id = R.drawable.rectangle),
-                contentDescription = "Menu icon (vector)",
-                modifier = Modifier
-                    .scale(.3F),
-                colorFilter = ColorFilter.tint(animColor2.value)
-            )
-        }
+            Box(modifier = Modifier.padding(top = anim2.value.dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.rectangle),
+                    contentDescription = "Menu icon (vector)",
+                    modifier = Modifier.scale(.3F),
+                    colorFilter = ColorFilter.tint(animColor2.value)
+                )
+            }
 
-        Box(modifier = Modifier.padding(top = anim3.value.dp, start = 215.dp)) {
-            Image(
-                painter = painterResource(id = R.drawable.rectangle),
-                contentDescription = "Menu icon (vector)",
-                modifier = Modifier
-                    .scale(.3F),
-                colorFilter = ColorFilter.tint(animColor3.value)
-            )
+            Box(modifier = Modifier.padding(top = anim3.value.dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.rectangle),
+                    contentDescription = "Menu icon (vector)",
+                    modifier = Modifier.scale(.3F),
+                    colorFilter = ColorFilter.tint(animColor3.value)
+                )
+            }
         }
     }
 }

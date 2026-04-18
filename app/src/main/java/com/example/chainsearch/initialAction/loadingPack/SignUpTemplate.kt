@@ -6,17 +6,25 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,9 +39,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -44,17 +54,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chainsearch.R
+import com.example.chainsearch.initialAction.auth.registerFunctionality.callRegisterEmail
 import com.example.chainsearch.initialAction.viewModels.LoadingScreenViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
+fun SignUpTemplate(viewModel: LoadingScreenViewModel) {
     val orange: Color = Color(204, 106, 20, 255)
     val lightOrange1: Color = Color(251, 237, 216, 255)
     val lightOrange2: Color = Color(255, 212, 159, 255)
-    val lightOrange3: Color = Color(255, 166, 77, 255)
+    val lightOrange3: Color = Color(255, 159, 56, 255)
 
     val usernameReady = remember { mutableStateOf(false) }
     val passwordReady = remember { mutableStateOf(false) }
@@ -63,6 +74,9 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
     val usernameValue = remember { mutableStateOf("") }
     val passwordValue = remember { mutableStateOf("") }
     val emailValue = remember { mutableStateOf("") }
+
+    var showError = remember { mutableStateOf(false) }
+    var errorM by remember { mutableStateOf("") }
 
     val transition = rememberInfiniteTransition()
     val anim = transition.animateFloat(
@@ -94,8 +108,6 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = orange)
-            .padding(9.dp)
             .clip(shape = RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp))
             .background(
                 brush = Brush.verticalGradient(
@@ -107,7 +119,31 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
             )
         ,color = Color.Transparent
     ) {
+        Row(
+            modifier = Modifier.fillMaxHeight(),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(.25f)
+            ) {
+                drawCircle(
+                    color = Color(255, 166, 77, 255),
+                    radius = size.height / 2f,
+                    center = Offset(size.width / 2f, size.height / 1.5f)
+                )
+            }
+        }
+
         Box {
+            if (showError.value) {
+                DisplayErrorMessage(
+                    errorM,
+                    onClose = { showError.value = false },
+                )
+            }
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -141,9 +177,9 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
                 Text(
                     text = "  User Info.  ",
                     modifier = Modifier
-                        .padding(top = 180.dp)
+                        .padding(top = 230.dp)
                         .clip(shape = RoundedCornerShape(6.dp, 6.dp, 6.dp, 6.dp))
-                        .background(color = orange)
+                        .background(color = lightOrange3)
                         .padding(3.dp)
                         .background(Color.White, RoundedCornerShape(6.dp)),
                     style = TextStyle(fontSize = 15.sp)
@@ -155,9 +191,9 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
                 Text(
                     text = "  Authentication Info.  ",
                     modifier = Modifier
-                        .padding(top = 330.dp)
+                        .padding(top = 380.dp)
                         .clip(shape = RoundedCornerShape(6.dp, 6.dp, 6.dp, 6.dp))
-                        .background(color = orange)
+                        .background(color = lightOrange3)
                         .padding(3.dp)
                         .background(Color.White, RoundedCornerShape(6.dp)),
                     style = TextStyle(fontSize = 15.sp)
@@ -169,7 +205,7 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
                 Text(
                     text = "~ or ~",
                     modifier = Modifier
-                        .padding(top = 555.dp),
+                        .padding(top = 605.dp),
                     style = TextStyle(fontSize = 18.sp, fontStyle = FontStyle.Italic),
                     fontWeight = FontWeight(200)
                 )
@@ -177,14 +213,14 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
 
             var isEnabled by remember { mutableStateOf(true) }
             var scope = rememberCoroutineScope()
-            Column (modifier = Modifier.fillMaxWidth().padding(top = 580.dp),
+            Column (modifier = Modifier.fillMaxWidth().padding(top = 630.dp),
                 horizontalAlignment = Alignment.CenterHorizontally) {
 
                 Button(
                     onClick = {
                         isEnabled = false
                         scope.launch {
-                            delay(3000)
+                            delay(1500)
                             isEnabled = true
                         }
                     },
@@ -215,8 +251,8 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
 
             Column (modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 594.dp)
-                .offset(x = (-95).dp),
+                .padding(top = 644.dp)
+                .offset(x = (-95).dp),  
                 horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
                     painter = painterResource(id = R.drawable.google_logo),
@@ -226,7 +262,7 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
 
             Column (modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 700.dp),
+                .padding(top = 750.dp),
                 horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(onClick = {
                     isEnabled = false
@@ -235,10 +271,20 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
                         isEnabled = true
                     }
 
+                    if (!usernameReady.value) {
+                        errorM = "Username should be between 2 and 20 characters long!"
+                        showError.value = true
+                    } else if (!emailReady.value) {
+                        errorM = "Email should not be empty!"
+                        showError.value = true
+                    } else if (!passwordReady.value) {
+                        errorM = "Password should be between 4 and 16 characters long!"
+                        showError.value = true
+                    }
+
                     if (usernameReady.value && emailReady.value && passwordReady.value) {
-                        viewModel.setUserData(usernameValue.value, passwordValue.value, emailValue.value)
-                        viewModel.setRegState(true)
-                        viewModel.setNewVal(false)
+                        viewModel.setNewVal(2)
+                        callRegisterEmail(usernameValue.value, passwordValue.value, emailValue.value, viewModel)
                     }
                 },
                     enabled = isEnabled,
@@ -258,7 +304,7 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
                         color = lightOrange1,
                         modifier = Modifier
                             .background(
-                                color = orange,
+                                color = lightOrange3,
                                 shape = RoundedCornerShape(50)
                             )
                             .padding(horizontal = 14.dp, vertical = 8.dp),
@@ -271,7 +317,7 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
         }
 
         var usernameScaleState = remember { mutableStateOf(false) }
-        Box(modifier = Modifier.padding(top = 250.dp, start = 70.dp)) {
+        Box(modifier = Modifier.padding(top = 300.dp, start = 70.dp)) {
             Image(
                 painter = painterResource(id = R.drawable.rectangle_2),
                 contentDescription = "Menu icon (vector)",
@@ -282,7 +328,7 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
         UsernameTextLabel(usernameScaleState, usernameReady, usernameValue)
 
         var emailScaleState = remember { mutableStateOf(false) }
-        Box(modifier = Modifier.padding(top = 400.dp, start = 70.dp)) {
+        Box(modifier = Modifier.padding(top = 450.dp, start = 70.dp)) {
             Image(
                 painter = painterResource(id = R.drawable.rectangle_2),
                 contentDescription = "Menu icon (vector)",
@@ -293,7 +339,7 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
         EmailTextLabel(emailScaleState, emailReady, emailValue)
 
         var passwordState = remember { mutableStateOf(false) }
-        Box(modifier = Modifier.padding(top = 500.dp, start = 70.dp)) {
+        Box(modifier = Modifier.padding(top = 550.dp, start = 70.dp)) {
             Image(
                 painter = painterResource(id = R.drawable.rectangle_2),
                 contentDescription = "Menu icon (vector)",
@@ -308,7 +354,7 @@ fun LoadingScreenTemplate_2(viewModel: LoadingScreenViewModel) {
 @Composable
 fun UsernameTextLabel(state: MutableState<Boolean>, isReady: MutableState<Boolean>, value: MutableState<String>) {
     var username by remember { mutableStateOf("") }
-    Box(modifier = Modifier.padding(top = 228.dp)) {
+    Box(modifier = Modifier.padding(top = 278.dp)) {
         TextField(
             value = username,
             onValueChange = {
@@ -334,7 +380,7 @@ fun UsernameTextLabel(state: MutableState<Boolean>, isReady: MutableState<Boolea
 fun EmailTextLabel(state: MutableState<Boolean>, isReady: MutableState<Boolean>, value: MutableState<String>) {
     var email by remember { mutableStateOf("") }
 
-    Box(modifier = Modifier.padding(top = 378.dp)) {
+    Box(modifier = Modifier.padding(top = 428.dp)) {
         TextField(
             value = email,
             onValueChange = {
@@ -361,7 +407,7 @@ fun EmailTextLabel(state: MutableState<Boolean>, isReady: MutableState<Boolean>,
 fun PasswordTextLabel(state: MutableState<Boolean>, isReady: MutableState<Boolean>, value: MutableState<String>) {
     var password by remember { mutableStateOf("") }
 
-    Box(modifier = Modifier.padding(top = 478.dp)) {
+    Box(modifier = Modifier.padding(top = 528.dp)) {
         TextField(
             value = password,
             onValueChange = {
@@ -384,7 +430,54 @@ fun PasswordTextLabel(state: MutableState<Boolean>, isReady: MutableState<Boolea
 }
 
 @Composable
+fun DisplayErrorMessage(
+    errorMessage: String,
+    onClose: () -> Unit,
+) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 2.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = Color(215, 59, 59, 255).copy(.96f),
+                        shape = RoundedCornerShape(50)
+                    )
+                    .padding(horizontal = 14.dp, vertical = 8.dp)
+            ) {
+
+                Text(
+                    text = errorMessage + " ".repeat(6),
+                    color = Color(239, 188, 188, 255),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    modifier = Modifier.align(Alignment.Center)
+                )
+
+                IconButton(
+                    onClick = onClose,
+                    modifier = Modifier
+                        .size(18.dp)
+                        .align(Alignment.TopEnd),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = Color.White
+                    )
+                }
+            }
+        }
+}
+
+@Composable
 @Preview
 fun Preview2() {
-    LoadingScreenTemplate_2(LoadingScreenViewModel())
+    SignUpTemplate(LoadingScreenViewModel())
 }
