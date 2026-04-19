@@ -54,6 +54,7 @@ fun LoadingScreen(viewModel: LoadingScreenViewModel) {
             1 -> IntroScreenTemplate(viewModel)
             2 -> LoadingScreenTemplate_1(viewModel)
             3 -> SignUpTemplate(viewModel)
+            4 -> LogInTemplate(viewModel)
         }
     }
 }

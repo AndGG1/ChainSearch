@@ -201,6 +201,7 @@ fun IntroScreenTemplate(viewModel: LoadingScreenViewModel) {
             Button(
                 onClick = {
                     scope.launch {
+                        viewModel.setNewVal(4)
                         delay(1500)
                         isEnabled = true
                     }
