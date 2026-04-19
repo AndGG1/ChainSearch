@@ -1,4 +1,4 @@
-package com.example.chainsearch.initialAction.loadingPack
+package com.example.chainsearch.initialAction.loadingPack.Templates
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.RepeatMode

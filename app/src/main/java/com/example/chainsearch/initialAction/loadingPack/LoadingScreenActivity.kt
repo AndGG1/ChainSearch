@@ -10,6 +10,8 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.example.chainsearch.initialAction.loadingPack.Templates.LoadingScreen
+import com.example.chainsearch.initialAction.loadingPack.helpers.switchActivity
 import com.example.chainsearch.initialAction.viewModels.LoadingScreenViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -18,7 +20,6 @@ import kotlinx.coroutines.withContext
 
 private val viewModel: LoadingScreenViewModel = LoadingScreenViewModel()
 class LoadingScreenActivity : ComponentActivity() {
-
     private var keepSplash = true
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -34,17 +35,8 @@ class LoadingScreenActivity : ComponentActivity() {
 
             startActivity(Intent(this@LoadingScreenActivity, LoadingScreenTemplate::class.java))
 
-            switchActivity()
-        }
-    }
-
-    private fun switchActivity() {
-        lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                viewModel.checkExternalInternalData(
-                    this@LoadingScreenActivity, 1.5
-                )
-                viewModel.setNewVal(1)
+                switchActivity(viewModel, this@LoadingScreenActivity)
             }
         }
     }

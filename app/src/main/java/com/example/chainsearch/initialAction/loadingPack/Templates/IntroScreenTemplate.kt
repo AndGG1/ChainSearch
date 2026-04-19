@@ -1,4 +1,4 @@
-package com.example.chainsearch.initialAction.loadingPack
+package com.example.chainsearch.initialAction.loadingPack.Templates
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
