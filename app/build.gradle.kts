@@ -50,6 +50,12 @@ android {
                 "API_KEY",
                 "\"${localProperties.getProperty("API_KEY")}\""
             )
+
+            buildConfigField(
+                "String",
+                "WEB_ID",
+                "\"${localProperties.getProperty("WEB_ID")}\""
+            )
         }
 
         debug {
@@ -63,6 +69,12 @@ android {
                 "String",
                    "API_KEY",
                 "\"${localProperties.getProperty("API_KEY")}\""
+            )
+
+            buildConfigField(
+                "String",
+                "WEB_ID",
+                "\"${localProperties.getProperty("WEB_ID")}\""
             )
         }
     }
@@ -78,9 +90,14 @@ android {
         buildConfig = true
         resValues = true
     }
+    //
 }
 
 dependencies {
+    implementation("androidx.credentials:credentials:1.5.0-rc01")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0-rc01")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
     implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.lambdapioneer.argon2kt:argon2kt:1.6.0")
