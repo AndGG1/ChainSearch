@@ -8,8 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-val mAuth = FirebaseAuth.getInstance()
-val databaseRef = FirebaseDatabase.getInstance(
+private val mAuth = FirebaseAuth.getInstance()
+private val databaseRef = FirebaseDatabase.getInstance(
     "https://versatile-bf2d4-default-rtdb.europe-west1.firebasedatabase.app/"
 ).reference
 
