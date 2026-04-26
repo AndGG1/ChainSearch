@@ -101,7 +101,6 @@ fun LogInTemplate(viewModel: LoadingScreenViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .clip(shape = RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp))
             .background(
                 brush = Brush.verticalGradient(
                     0.1f to animColor.value,

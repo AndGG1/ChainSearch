@@ -23,14 +23,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +49,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -54,14 +58,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chainsearch.R
+import com.example.chainsearch.initialAction.auth.registerFunctionality.signInWithGoogle
 import com.example.chainsearch.initialAction.auth.registerFunctionality.callRegisterEmail
 import com.example.chainsearch.initialAction.viewModels.LoadingScreenViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpTemplate(viewModel: LoadingScreenViewModel) {
+    val currContext = LocalContext.current
+
     val orange: Color = Color(204, 106, 20, 255)
     val lightOrange1: Color = Color(251, 237, 216, 255)
     val lightOrange2: Color = Color(255, 212, 159, 255)
@@ -108,7 +116,6 @@ fun SignUpTemplate(viewModel: LoadingScreenViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .clip(shape = RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp))
             .background(
                 brush = Brush.verticalGradient(
                     0.1f to animColor.value,
@@ -212,40 +219,44 @@ fun SignUpTemplate(viewModel: LoadingScreenViewModel) {
             }
 
             var isEnabled by remember { mutableStateOf(true) }
-            var scope = rememberCoroutineScope()
+            val scope = rememberCoroutineScope()
             Column (modifier = Modifier.fillMaxWidth().padding(top = 630.dp),
                 horizontalAlignment = Alignment.CenterHorizontally) {
 
-                Button(
-                    onClick = {
-                        isEnabled = false
-                        scope.launch {
-                            delay(1500)
-                            isEnabled = true
-                        }
-                    },
-                    enabled = isEnabled,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                        disabledContentColor = Color.Transparent
-                    ),
-                    modifier =
-                        Modifier
-                            .background(color = Color.Transparent)
-                )
-                {
-                    Text(
-                        text = "       Sign up with Google  ",
-                        modifier = Modifier
-                            .clip(shape = RoundedCornerShape(6.dp, 6.dp, 6.dp, 6.dp))
-                            .background(Color.White)
-                            .padding(6.dp)
-                            .background(Color.White),
-                        color = Color.DarkGray,
-                        style = TextStyle(fontSize = 20.sp)
+                CompositionLocalProvider(LocalRippleConfiguration provides null) {
+                    Button(
+                        onClick = {
+                            signInWithGoogle(currContext)
+
+                            isEnabled = false
+                            scope.launch {
+                                delay(1500)
+                                isEnabled = true
+                            }
+                        },
+                        enabled = isEnabled,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            disabledContentColor = Color.Transparent
+                        ),
+                        modifier =
+                            Modifier
+                                .background(color = Color.Transparent)
                     )
+                    {
+                        Text(
+                            text = "       Sign up with Google  ",
+                            modifier = Modifier
+                                .clip(shape = RoundedCornerShape(6.dp, 6.dp, 6.dp, 6.dp))
+                                .background(Color.White)
+                                .padding(6.dp)
+                                .background(Color.White),
+                            color = Color.DarkGray,
+                            style = TextStyle(fontSize = 20.sp)
+                        )
+                    }
                 }
             }
 
@@ -264,54 +275,63 @@ fun SignUpTemplate(viewModel: LoadingScreenViewModel) {
                 .fillMaxWidth()
                 .padding(top = 750.dp),
                 horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(onClick = {
-                    isEnabled = false
-                    scope.launch {
-                        delay(3000)
-                        isEnabled = true
-                    }
+                CompositionLocalProvider(LocalRippleConfiguration provides null) {
+                    Button(
+                        onClick = {
+                            isEnabled = false
+                            scope.launch {
+                                delay(3000)
+                                isEnabled = true
+                            }
 
-                    if (!usernameReady.value) {
-                        errorM = "Username should be between 2 and 20 characters long!"
-                        showError.value = true
-                    } else if (!emailReady.value) {
-                        errorM = "Email should not be empty!"
-                        showError.value = true
-                    } else if (!passwordReady.value) {
-                        errorM = "Password should be between 4 and 16 characters long!"
-                        showError.value = true
-                    }
+                            if (!usernameReady.value) {
+                                errorM = "Username should be between 2 and 20 characters long!"
+                                showError.value = true
+                            } else if (!emailReady.value) {
+                                errorM = "Email should not be empty!"
+                                showError.value = true
+                            } else if (!passwordReady.value) {
+                                errorM = "Password should be between 4 and 16 characters long!"
+                                showError.value = true
+                            }
 
-                    if (usernameReady.value && emailReady.value && passwordReady.value) {
-                        viewModel.setNewVal(2)
-                        callRegisterEmail(usernameValue.value, passwordValue.value, emailValue.value, viewModel)
-                    }
-                },
-                    enabled = isEnabled,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                        disabledContentColor = Color.Transparent
-                    ),
-                    modifier =
-                        Modifier
-                            .background(color = Color.Transparent)
-                            .scale(1.35F))
-                {
-                    Text(
-                        text = "Sign Up",
-                        color = lightOrange1,
-                        modifier = Modifier
-                            .background(
-                                color = lightOrange3,
-                                shape = RoundedCornerShape(50)
-                            )
-                            .padding(horizontal = 14.dp, vertical = 8.dp),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.SemiBold
-                        )
+                            if (usernameReady.value && emailReady.value && passwordReady.value) {
+                                viewModel.setNewVal(2)
+                                callRegisterEmail(
+                                    usernameValue.value,
+                                    passwordValue.value,
+                                    emailValue.value,
+                                    viewModel
+                                )
+                            }
+                        },
+                        enabled = isEnabled,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            disabledContentColor = Color.Transparent
+                        ),
+                        modifier =
+                            Modifier
+                                .background(color = Color.Transparent)
+                                .scale(1.35F)
                     )
+                    {
+                        Text(
+                            text = "Sign Up",
+                            color = lightOrange1,
+                            modifier = Modifier
+                                .background(
+                                    color = lightOrange3,
+                                    shape = RoundedCornerShape(50)
+                                )
+                                .padding(horizontal = 14.dp, vertical = 8.dp),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                    }
                 }
             }
         }
