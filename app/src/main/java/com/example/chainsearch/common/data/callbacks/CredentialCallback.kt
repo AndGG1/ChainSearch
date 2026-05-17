@@ -1,4 +1,4 @@
-package com.example.chainsearch.feature_register.data.data_source.helpers.callbacks
+package com.example.chainsearch.common.data.callbacks
 
 interface CredentialCallback {
     fun onRes(worked: Boolean, result: String?) {

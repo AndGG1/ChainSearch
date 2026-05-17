@@ -1,8 +1,6 @@
 package com.example.chainsearch
 
-import android.util.Log
 import com.example.chainsearch.initialAction.auth.RegisterUserFunctionality
-import com.example.chainsearch.initialAction.auth.convertTo_Argon2id
 import org.junit.Test
 
 import org.junit.Assert.*
